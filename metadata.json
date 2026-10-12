@@ -1,0 +1,6 @@
+{
+  "name": "BIZSTOCK",
+  "description": "Plateforme professionnelle de gestion d'entreprise : stocks, produits, ventes, achats, clients, fournisseurs, indices de performance et synchronisation hors ligne.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

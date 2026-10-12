@@ -1,0 +1,193 @@
+{
+  "entities": {
+    "User": {
+      "title": "User",
+      "description": "User profile with email and current active company",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "User UID from Firebase Auth" },
+        "email": { "type": "string", "description": "User email address" },
+        "displayName": { "type": "string", "description": "User display name" },
+        "currentCompanyId": { "type": "string", "description": "ID of active company workspace" },
+        "createdAt": { "type": "string", "format": "date-time", "description": "Account creation timestamp" }
+      },
+      "required": ["id", "email"]
+    },
+    "Company": {
+      "title": "Company",
+      "description": "Enterprise tenant workspace in BIZSTOCK",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Unique company workspace ID" },
+        "name": { "type": "string", "description": "Enterprise or business name" },
+        "ownerId": { "type": "string", "description": "Owner user UID" },
+        "plan": { "type": "string", "description": "Subscription plan (FREE, PRO, ENTERPRISE)" },
+        "createdAt": { "type": "string", "format": "date-time", "description": "Company registration timestamp" }
+      },
+      "required": ["id", "name", "ownerId"]
+    },
+    "Membership": {
+      "title": "Membership",
+      "description": "Association between a user and a company workspace with role permissions",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Format: {userId}_{companyId}" },
+        "userId": { "type": "string", "description": "Member user UID" },
+        "companyId": { "type": "string", "description": "Company workspace ID" },
+        "role": { "type": "string", "enum": ["OWNER", "ADMIN", "MANAGER", "SELLER"], "description": "Role within the company" },
+        "active": { "type": "boolean", "description": "Whether the membership is active" },
+        "joinedAt": { "type": "string", "format": "date-time", "description": "Membership creation timestamp" }
+      },
+      "required": ["id", "userId", "companyId", "role", "active"]
+    },
+    "Product": {
+      "title": "Product",
+      "description": "Catalog product belonging to a company",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Product UUID" },
+        "companyId": { "type": "string", "description": "Company tenant ID" },
+        "sku": { "type": "string", "description": "Unique stock keeping unit" },
+        "name": { "type": "string", "description": "Product display name" },
+        "category": { "type": "string", "description": "Product category" },
+        "purchasePrice": { "type": "number", "description": "Unit purchase / cost price" },
+        "sellingPrice": { "type": "number", "description": "Unit selling price" },
+        "currentStock": { "type": "integer", "description": "Current quantity in stock" },
+        "minStockAlert": { "type": "integer", "description": "Low stock alert threshold" },
+        "unit": { "type": "string", "description": "Packaging unit (Unité, Carton, kg, etc.)" },
+        "description": { "type": "string", "description": "Product details or notes" },
+        "imageUri": { "type": "string", "description": "Product image URI or thumbnail" },
+        "updatedAt": { "type": "string", "format": "date-time", "description": "Last update timestamp" }
+      },
+      "required": ["id", "companyId", "sku", "name", "sellingPrice"]
+    },
+    "Customer": {
+      "title": "Customer",
+      "description": "Customer account directory belonging to a company",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Customer UUID" },
+        "companyId": { "type": "string", "description": "Company tenant ID" },
+        "name": { "type": "string", "description": "Customer full name or contact" },
+        "company": { "type": "string", "description": "Customer company name" },
+        "email": { "type": "string", "description": "Contact email" },
+        "phone": { "type": "string", "description": "Contact phone" },
+        "city": { "type": "string", "description": "Location city" },
+        "balance": { "type": "number", "description": "Outstanding balance or credit" },
+        "totalOrders": { "type": "integer", "description": "Total order count" }
+      },
+      "required": ["id", "companyId", "name"]
+    },
+    "Supplier": {
+      "title": "Supplier",
+      "description": "Vendor or supplier belonging to a company",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Supplier UUID" },
+        "companyId": { "type": "string", "description": "Company tenant ID" },
+        "name": { "type": "string", "description": "Supplier company or contact name" },
+        "company": { "type": "string", "description": "Supplier business name" },
+        "email": { "type": "string", "description": "Contact email" },
+        "phone": { "type": "string", "description": "Contact phone" },
+        "category": { "type": "string", "description": "Supply category" },
+        "activeOrders": { "type": "integer", "description": "Number of active purchase orders" },
+        "rating": { "type": "number", "description": "Supplier rating out of 5" }
+      },
+      "required": ["id", "companyId", "name"]
+    },
+    "Sale": {
+      "title": "Sale",
+      "description": "Recorded sales transaction with invoice details",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Sale UUID" },
+        "companyId": { "type": "string", "description": "Company tenant ID" },
+        "invoiceNumber": { "type": "string", "description": "Formatted invoice number (e.g. FAC-2026-001)" },
+        "customerName": { "type": "string", "description": "Customer name" },
+        "customerPhone": { "type": "string", "description": "Customer phone" },
+        "customerEmail": { "type": "string", "description": "Customer email" },
+        "totalAmount": { "type": "number", "description": "Total invoice amount" },
+        "paymentStatus": { "type": "string", "description": "Status (PAYÉE, EN_ATTENTE, ANNULÉE)" },
+        "paymentMethod": { "type": "string", "description": "Payment mode" },
+        "date": { "type": "integer", "description": "Timestamp in milliseconds" },
+        "itemsSummary": { "type": "string", "description": "Human-readable summary of sold items" },
+        "itemsCount": { "type": "integer", "description": "Total item count" },
+        "itemsJson": { "type": "string", "description": "Serialized item lines" },
+        "notes": { "type": "string", "description": "Sale memo or notes" }
+      },
+      "required": ["id", "companyId", "invoiceNumber", "totalAmount"]
+    },
+    "Purchase": {
+      "title": "Purchase",
+      "description": "Supplier purchase order",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Purchase UUID" },
+        "companyId": { "type": "string", "description": "Company tenant ID" },
+        "orderNumber": { "type": "string", "description": "Purchase order identifier" },
+        "supplierName": { "type": "string", "description": "Supplier name" },
+        "totalAmount": { "type": "number", "description": "Total order amount" },
+        "status": { "type": "string", "description": "Order status (REÇU, EN_COURS, COMMANDÉ)" },
+        "date": { "type": "integer", "description": "Timestamp in milliseconds" },
+        "itemsSummary": { "type": "string", "description": "Items summary" },
+        "itemsCount": { "type": "integer", "description": "Total quantity ordered" }
+      },
+      "required": ["id", "companyId", "orderNumber", "totalAmount"]
+    },
+    "StockMovement": {
+      "title": "StockMovement",
+      "description": "Stock audit log entry for inventory movements",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Movement UUID" },
+        "companyId": { "type": "string", "description": "Company tenant ID" },
+        "productId": { "type": "string", "description": "Associated product ID" },
+        "productName": { "type": "string", "description": "Product name" },
+        "type": { "type": "string", "description": "Movement type (ENTRÉE, SORTIE, AJUSTEMENT)" },
+        "quantity": { "type": "integer", "description": "Quantity moved" },
+        "reason": { "type": "string", "description": "Movement justification" },
+        "date": { "type": "integer", "description": "Timestamp in milliseconds" },
+        "operator": { "type": "string", "description": "User or operator who performed the movement" }
+      },
+      "required": ["id", "companyId", "productId", "type", "quantity"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "User",
+      "description": "User account profiles"
+    },
+    "/memberships/{membershipId}": {
+      "schema": "Membership",
+      "description": "User company association and permissions"
+    },
+    "/companies/{companyId}": {
+      "schema": "Company",
+      "description": "Company tenant root"
+    },
+    "/companies/{companyId}/products/{productId}": {
+      "schema": "Product",
+      "description": "Company products catalog"
+    },
+    "/companies/{companyId}/customers/{customerId}": {
+      "schema": "Customer",
+      "description": "Company customers directory"
+    },
+    "/companies/{companyId}/suppliers/{supplierId}": {
+      "schema": "Supplier",
+      "description": "Company suppliers directory"
+    },
+    "/companies/{companyId}/sales/{saleId}": {
+      "schema": "Sale",
+      "description": "Company sales and invoices"
+    },
+    "/companies/{companyId}/purchases/{purchaseId}": {
+      "schema": "Purchase",
+      "description": "Company purchase orders"
+    },
+    "/companies/{companyId}/stockMovements/{movementId}": {
+      "schema": "StockMovement",
+      "description": "Company stock movements ledger"
+    }
+  }
+}
